@@ -1,0 +1,29 @@
+on:
+  release:
+    types: [created]
+
+name: Build Release
+
+jobs:
+  build-matrix:
+    strategy:
+      matrix:
+        arch: [amd64]
+        os: [linux, darwin, windows]
+        include:
+          - os: linux
+            arch: arm
+          - os: linux
+            arch: arm64
+    name: release linux/amd64
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: compile and release
+        uses: wangyoucao577/go-release-action@v1.11
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          goarch: ${{ matrix.arch }}
+          goos: ${{ matrix.os }}
+          extra_files: LICENSE README.md
+          binary_name: ctass
