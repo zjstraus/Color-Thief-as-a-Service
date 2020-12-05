@@ -19,6 +19,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - name: Get dependencies
+          run: |
+            go get -v -t -d ./...
+            if [ -f Gopkg.toml ]; then
+                curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
+                dep ensure
+            fi
       - name: compile and release
         uses: wangyoucao577/go-release-action@v1.11
         with:
